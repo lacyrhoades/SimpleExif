@@ -99,6 +99,10 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
     [self setValue:make forTiffKey:kCGImagePropertyTIFFModel];
 }
 
+- (void)addArtist:(NSString *)artist {
+    [self setValue:artist forTiffKey:kCGImagePropertyTIFFArtist];
+}
+
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value {
     [self.exifDictionary setObject:value forKey:key];
 }

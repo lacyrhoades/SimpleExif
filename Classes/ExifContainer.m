@@ -34,34 +34,34 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 - (void)addLocation:(CLLocation *)currentLocation {
     CLLocationDegrees latitude  = currentLocation.coordinate.latitude;
     CLLocationDegrees longitude = currentLocation.coordinate.longitude;
-
+    
     NSString *latitudeRef = nil;
     NSString *longitudeRef = nil;
-
+    
     if (latitude < 0.0) {
-
+        
         latitude *= -1;
         latitudeRef = @"S";
-
+        
     } else {
-
+        
         latitudeRef = @"N";
-
+        
     }
-
+    
     if (longitude < 0.0) {
-
+        
         longitude *= -1;
         longitudeRef = @"W";
-
+        
     } else {
-
+        
         longitudeRef = @"E";
-
+        
     }
-
+    
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSTimeStamp] = [self getUTCFormattedDate:currentLocation.timestamp];
-
+    
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSLatitudeRef] = latitudeRef;
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSLatitude] = [NSNumber numberWithFloat:latitude];
 
@@ -99,6 +99,10 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
     [self setValue:make forTiffKey:kCGImagePropertyTIFFModel];
 }
 
+- (void)addArtist:(NSString *)artist {
+    [self setValue:artist forTiffKey:kCGImagePropertyTIFFArtist];
+}
+
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value {
     [self.exifDictionary setObject:value forKey:key];
 }
@@ -127,12 +131,12 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 
 - (NSMutableDictionary *)dictionaryForKey:(NSString *)key {
     NSMutableDictionary *dict = self.imageMetadata[key];
-
+    
     if (!dict) {
         dict = [[NSMutableDictionary alloc] init];
         self.imageMetadata[key] = dict;
     }
-
+    
     return dict;
 }
 
@@ -140,16 +144,16 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 
 - (NSString *)getUTCFormattedDate:(NSDate *)localDate {
     static NSDateFormatter *dateFormatter = nil;
-
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
 
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-
+        
     });
 
-
+    
     return [dateFormatter stringFromDate:localDate];
 }
 

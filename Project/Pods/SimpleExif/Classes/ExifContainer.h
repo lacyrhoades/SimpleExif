@@ -19,6 +19,7 @@
 - (void)addProjection:(NSString *)projection;
 - (void)addLensModel:(NSString *)model;
 - (void)addLensMake:(NSString *)make;
+- (void)addArtist:(NSString *)artist;
 
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value;
 
