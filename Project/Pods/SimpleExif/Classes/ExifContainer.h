@@ -17,6 +17,8 @@
 - (void)addCreationDate:(NSDate *)date;
 - (void)addDescription:(NSString *)description;
 - (void)addProjection:(NSString *)projection;
+- (void)addLensModel:(NSString *)model;
+- (void)addLensMake:(NSString *)make;
 
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value;
 
