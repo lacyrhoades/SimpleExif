@@ -24,21 +24,14 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 @implementation ExifContainer
 
 - (instancetype)init {
-
     self = [super init];
-
     if (self) {
-
         _imageMetadata = [[NSMutableDictionary alloc] init];
-
     }
-
     return self;
-
 }
 
 - (void)addLocation:(CLLocation *)currentLocation {
-
     CLLocationDegrees latitude  = currentLocation.coordinate.latitude;
     CLLocationDegrees longitude = currentLocation.coordinate.longitude;
 
@@ -77,95 +70,75 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSDOP] = [NSNumber numberWithFloat:currentLocation.horizontalAccuracy];
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSAltitude] = [NSNumber numberWithFloat:currentLocation.altitude];
-
 }
 
 - (void)addUserComment:(NSString*)comment {
-
     NSString *key = kCGImagePropertyExifUserComment;
     [self setValue:comment forExifKey:key];
-
 }
 
 - (void)addCreationDate:(NSDate *)date {
-
     NSString *dateString = [self getUTCFormattedDate:date];
     NSString *key = kCGImagePropertyExifDateTimeOriginal;
     [self setValue:dateString forExifKey:key];
-
 }
 
 - (void)addDescription:(NSString*)description {
-
-    [self.tiffDictionary setObject:description forKey:(NSString *)kCGImagePropertyTIFFImageDescription];
-
+    [self setValue:description forTiffKey:kCGImagePropertyTIFFImageDescription];
 }
 
 - (void)addProjection:(NSString *)projection {
-
     [self setValue:projection forExifKey:kCGImagePropertyProjection];
-
 }
 
 - (void)addLensModel:(NSString *)model {
-    [self setValue:model forExifKey:kCGImagePropertyTIFFModel];
+    [self setValue:model forTiffKey:kCGImagePropertyTIFFMake];
 }
 
 - (void)addLensMake:(NSString *)make {
-    [self setValue:make forExifKey:kCGImagePropertyTIFFMake];
+    [self setValue:make forTiffKey:kCGImagePropertyTIFFModel];
 }
 
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value {
-
     [self.exifDictionary setObject:value forKey:key];
+}
 
+- (void)setValue:(NSString *)key forTiffKey:(NSString *)value {
+    [self.tiffDictionary setObject:value forKey:key];
 }
 
 - (NSDictionary *)exifData {
-
     return self.imageMetadata;
-
 }
 
 #pragma mark - Getters
 
 - (NSMutableDictionary *)exifDictionary {
-
     return [self dictionaryForKey:(NSString*)kCGImagePropertyExifDictionary];
-
 }
 
 - (NSMutableDictionary *)tiffDictionary {
-
     return [self dictionaryForKey:(NSString*)kCGImagePropertyTIFFDictionary];
-
 }
 
 - (NSMutableDictionary *)gpsDictionary {
-
     return [self dictionaryForKey:(NSString*)kCGImagePropertyGPSDictionary];
-
 }
 
 - (NSMutableDictionary *)dictionaryForKey:(NSString *)key {
-
     NSMutableDictionary *dict = self.imageMetadata[key];
 
     if (!dict) {
-
         dict = [[NSMutableDictionary alloc] init];
         self.imageMetadata[key] = dict;
-
     }
 
     return dict;
-
 }
 
 #pragma mark - Helpers
 
 - (NSString *)getUTCFormattedDate:(NSDate *)localDate {
-
     static NSDateFormatter *dateFormatter = nil;
 
     static dispatch_once_t onceToken;
@@ -178,7 +151,6 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 
 
     return [dateFormatter stringFromDate:localDate];
-
 }
 
 @end
