@@ -107,6 +107,14 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 
 }
 
+- (void)addLensModel:(NSString *)model {
+    [self setValue:model forExifKey:kCGImagePropertyExifLensModel];
+}
+
+- (void)addLensMake:(NSString *)make {
+    [self setValue:make forExifKey:kCGImagePropertyExifLensMake];
+}
+
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value {
 
     [self.exifDictionary setObject:value forKey:key];
