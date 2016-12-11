@@ -53,28 +53,23 @@
     [container addCreationDate:[NSDate dateWithTimeIntervalSinceNow:-10000000]];
     
     // and your location
-    [container addLocation:locations[0]];
+    // [container addLocation:locations[0]];
+    [container addCameraMake: @"Lacy"];
+    [container addCameraModel: @"Rhoades"];
+    [container addArtist: @"L Rhoades"];
     
     // add exif data to image
     NSData *imageData = [[UIImage imageNamed:@"DemoImage"] addExif:container];
-    
-    NSString *imagePath = [self saveImageDataToDocuments:imageData];
-    NSLog(@"saved image path: %@", imagePath);
-    
-    // we use location only for demo purpose, so 1 location is enough
-    [manager stopUpdatingLocation];
-    
+    [self saveImageDataToDocuments:imageData];
 }
 
 - (NSString *)saveImageDataToDocuments:(NSData *)data {
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *savedImagePath = [documentsDirectory stringByAppendingPathComponent:@"savedImage.jpg"];
     [data writeToFile:savedImagePath atomically:NO];
-    
+    NSLog(@"saved image file at path: %@", savedImagePath);
     return savedImagePath;
-    
 }
 
 @end

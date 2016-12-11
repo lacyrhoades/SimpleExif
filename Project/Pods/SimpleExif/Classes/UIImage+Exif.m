@@ -19,11 +19,20 @@
     // create an imagesourceref
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef) imageData, NULL);
     
+    NSDictionary *metadata = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, 0, NULL));
+    
+    NSMutableDictionary *metadataAsMutable = [metadata mutableCopy];
+    
+    [metadataAsMutable setObject:container.exifDictionary forKey:kCGImagePropertyExifDictionary];
+    [metadataAsMutable setObject:container.tiffDictionary forKey:kCGImagePropertyTIFFDictionary];
+    [metadataAsMutable setObject:container.gpsDictionary forKey:kCGImagePropertyGPSDictionary];
+    
     // this is the type of image (e.g., public.jpeg)
     CFStringRef UTI = CGImageSourceGetType(source);
     
     // create a new data object and write the new image into it
     NSMutableData *dest_data = [NSMutableData data];
+    
     CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)dest_data, UTI, 1, NULL);
     
     if (!destination) {
@@ -31,7 +40,8 @@
     }
     
     // add the image contained in the image source to the destination, overidding the old metadata with our modified metadata
-    CGImageDestinationAddImageFromSource(destination, source, 0, (__bridge CFDictionaryRef) container.exifData);
+    CGImageDestinationAddImageFromSource(destination, source, 0, (__bridge CFDictionaryRef) metadataAsMutable);
+    
     BOOL success = NO;
     success = CGImageDestinationFinalize(destination);
     

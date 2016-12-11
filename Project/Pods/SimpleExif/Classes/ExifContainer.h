@@ -12,16 +12,19 @@
 
 @interface ExifContainer : NSObject
 
+@property (nonatomic, strong, readonly) NSMutableDictionary *exifDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary *tiffDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary *gpsDictionary;
+
 - (void)addLocation:(CLLocation *)currentLocation;
 - (void)addUserComment:(NSString *)comment;
 - (void)addCreationDate:(NSDate *)date;
 - (void)addDescription:(NSString *)description;
 - (void)addProjection:(NSString *)projection;
-- (void)addLensModel:(NSString *)model;
-- (void)addLensMake:(NSString *)make;
+- (void)addCameraMake:(NSString *)make;
+- (void)addCameraModel:(NSString *)model;
 - (void)addArtist:(NSString *)artist;
 
 - (void)setValue:(NSString *)key forExifKey:(NSString *)value;
 
-- (NSDictionary *)exifData;
 @end

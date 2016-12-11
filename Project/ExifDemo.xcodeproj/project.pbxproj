@@ -198,6 +198,7 @@
 				TargetAttributes = {
 					ABDB53381A7FFFE7001ABE1E = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = HZT822U3RS;
 					};
 					ABDB53511A7FFFE7001ABE1E = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -407,6 +408,7 @@
 			baseConfigurationReference = 9A487851CB741AC97A8F4ABD /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = HZT822U3RS;
 				INFOPLIST_FILE = ExifDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -418,6 +420,7 @@
 			baseConfigurationReference = 12CC1BB8104E113432371939 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = HZT822U3RS;
 				INFOPLIST_FILE = ExifDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -14,11 +14,10 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 
 @interface ExifContainer ()
 
-@property (nonatomic, strong) NSMutableDictionary *imageMetadata;
+@property (nonatomic, strong) NSMutableDictionary *exifDictionary;
+@property (nonatomic, strong) NSMutableDictionary *tiffDictionary;
+@property (nonatomic, strong) NSMutableDictionary *gpsDictionary;
 
-@property (nonatomic, strong, readonly) NSMutableDictionary *exifDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary *tiffDictionary;
-@property (nonatomic, strong, readonly) NSMutableDictionary *gpsDictionary;
 @end
 
 @implementation ExifContainer
@@ -26,7 +25,9 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _imageMetadata = [[NSMutableDictionary alloc] init];
+        self.exifDictionary = [[NSMutableDictionary alloc] init];
+        self.tiffDictionary = [[NSMutableDictionary alloc] init];
+        self.gpsDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -34,34 +35,34 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
 - (void)addLocation:(CLLocation *)currentLocation {
     CLLocationDegrees latitude  = currentLocation.coordinate.latitude;
     CLLocationDegrees longitude = currentLocation.coordinate.longitude;
-    
+
     NSString *latitudeRef = nil;
     NSString *longitudeRef = nil;
-    
+
     if (latitude < 0.0) {
-        
+
         latitude *= -1;
         latitudeRef = @"S";
-        
+
     } else {
-        
+
         latitudeRef = @"N";
-        
+
     }
-    
+
     if (longitude < 0.0) {
-        
+
         longitude *= -1;
         longitudeRef = @"W";
-        
+
     } else {
-        
+
         longitudeRef = @"E";
-        
+
     }
-    
+
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSTimeStamp] = [self getUTCFormattedDate:currentLocation.timestamp];
-    
+
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSLatitudeRef] = latitudeRef;
     self.gpsDictionary[(NSString*)kCGImagePropertyGPSLatitude] = [NSNumber numberWithFloat:latitude];
 
@@ -91,12 +92,12 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
     [self setValue:projection forExifKey:kCGImagePropertyProjection];
 }
 
-- (void)addLensModel:(NSString *)model {
-    [self setValue:model forTiffKey:kCGImagePropertyTIFFMake];
+- (void)addCameraMake:(NSString *)make {
+    [self setValue:make forTiffKey:kCGImagePropertyTIFFModel];
 }
 
-- (void)addLensMake:(NSString *)make {
-    [self setValue:make forTiffKey:kCGImagePropertyTIFFModel];
+- (void)addCameraModel:(NSString *)model {
+    [self setValue:model forTiffKey:kCGImagePropertyTIFFMake];
 }
 
 - (void)addArtist:(NSString *)artist {
@@ -111,49 +112,20 @@ NSString const * kCGImagePropertyProjection = @"ProjectionType";
     [self.tiffDictionary setObject:value forKey:key];
 }
 
-- (NSDictionary *)exifData {
-    return self.imageMetadata;
-}
-
-#pragma mark - Getters
-
-- (NSMutableDictionary *)exifDictionary {
-    return [self dictionaryForKey:(NSString*)kCGImagePropertyExifDictionary];
-}
-
-- (NSMutableDictionary *)tiffDictionary {
-    return [self dictionaryForKey:(NSString*)kCGImagePropertyTIFFDictionary];
-}
-
-- (NSMutableDictionary *)gpsDictionary {
-    return [self dictionaryForKey:(NSString*)kCGImagePropertyGPSDictionary];
-}
-
-- (NSMutableDictionary *)dictionaryForKey:(NSString *)key {
-    NSMutableDictionary *dict = self.imageMetadata[key];
-    
-    if (!dict) {
-        dict = [[NSMutableDictionary alloc] init];
-        self.imageMetadata[key] = dict;
-    }
-    
-    return dict;
-}
-
 #pragma mark - Helpers
 
 - (NSString *)getUTCFormattedDate:(NSDate *)localDate {
     static NSDateFormatter *dateFormatter = nil;
-    
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
 
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
-        
+
     });
 
-    
+
     return [dateFormatter stringFromDate:localDate];
 }
 
